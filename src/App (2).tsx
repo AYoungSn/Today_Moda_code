@@ -1,33 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, FlatList, Dimensions } from 'react-native';
-import axios from 'axios'
+import { 
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Dimensions,
+  SafeAreaView,
+  ScrollView,
+  Image,
+} from 'react-native';
 
 const NAVER_API_KEY = "Z162CePuTsRagu8ZBIHn";
 const NAVER_API_SECRET = "ZhIgU_cS9J";
 
 const numColumns = 4;
 
-class App extends React.Component {
-
-  constructor(props: any) {
-    super(props) ;
-    this.state = {
-      imageUrl: null,
-      imageTitle: null,
-    }
+export class App extends React.Component {
+  state = {
+    imageUrl: '',
+    imageTitle: null,
   }
   
   componentDidMount() {
-    return fetch("https://openapi.naver.com/v1/search/shop.xml?query=%EC%A3%BC%EC%8B%9D&display=24&start=1&sort=sim", {
-      headers: {
-        "X-Naver_client_id": "{API_KEY}",
-        "X-Naver-Client-Secret": "API_SECRET}"
-      }
+    return fetch("https://openapi.naver.com/v1/search/shop.json?query=%EC%A3%BC%EC%8B%9D&display=24&start=1&sort=sim", 
+      {
+        headers: {
+          "X-Naver_client_id": "{NAVER_API_KEY}",
+          "X-Naver-Client-Secret": "{NAVER_API_SECRET}"
         }
-    )
-    .then( (response) => response.json())
+      }
+    ).then( (response) => response.json())
     .then(json => {
+      console.log(json)
       this.setState({
         imageUrl: json.image,
         imageTitle: json.title
@@ -35,7 +39,7 @@ class App extends React.Component {
     } )
   }
 
-  renderItem = (item, index ) => { //쇼핑 결과 가져오기
+  renderItem = ({item, index} ) => { //쇼핑 결과 가져오기
     if (item.empty === true) {
       return <View style={[styles.item, styles.itemInvisible]} />;
     }
@@ -43,6 +47,7 @@ class App extends React.Component {
       <View
         style={styles.item}
       >
+        <Image style={{width: 10}} source={{uri:this.state.imageUrl}} />
         <Text style={styles.itemText}>{item.key}</Text>
       </View>
     );
@@ -50,24 +55,26 @@ class App extends React.Component {
 
   render() { // 한 화면에 4줄로 출력
     return (
-      <FlatList
-        imageThumb={formatData(, numColumns)}
-        style={styles.container}
-        renderItem={this.renderItem}
-        numColumns={numColumns}
-      />
+      <SafeAreaView>
+        <FlatList
+          // imageThumb={formatData(, numColumns)}
+          style={styles.container}
+          renderItem={this.renderItem}
+          numColumns={numColumns}
+        />
+      </SafeAreaView>
     );
   }
 
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#ffffff',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    width: 100,
   },
 
   item: {
