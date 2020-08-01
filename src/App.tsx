@@ -13,6 +13,9 @@ import {
   View,
   ScrollView,
   Text,
+  FlatList,
+  Image,
+  
 } from 'react-native';
 import styled from 'styled-components/native';
 import Weather from 'Weather';
@@ -21,6 +24,12 @@ import Shopping from 'Shopping';
 import Geolocation from '@react-native-community/geolocation';
 
 const API_KEY = "b86c474546c60f7c146da98180738950";
+
+// shopping api key
+const NAVER_API_KEY = "Z162CePuTsRagu8ZBIHn";
+const NAVER_API_SECRET = "ZhIgU_cS9J";
+
+const numColumns = 4;
 
 const Header = styled.Text`
 color: #000000;
@@ -42,7 +51,9 @@ export default class App extends React.Component<Props,State>{
     weatherName: '',
     cityTemp: 0,
     error: null,
-    feels: 0
+    feels: 0,
+    imageUrl: '',
+    imageTitle: null,
   };
 
   //위치 정보 확인
@@ -57,6 +68,21 @@ export default class App extends React.Component<Props,State>{
         })
       }
     );
+    fetch("https://openapi.naver.com/v1/search/shop.json?query=%EC%A3%BC%EC%8B%9D&display=24&start=1&sort=sim", 
+      {
+        headers: {
+          "X-Naver_client_id": "{NAVER_API_KEY}",
+          "X-Naver-Client-Secret": "{NAVER_API_SECRET}"
+        }
+      }
+    ).then( (response) => response.json())
+    .then(json => {
+      console.log(json)
+      this.setState({
+        imageUrl: json.image,
+        imageTitle: json.title
+      })
+    })
   }
   _getWeather = (lat, lon) => {
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
@@ -71,6 +97,21 @@ export default class App extends React.Component<Props,State>{
       })
     });
   }
+
+  renderItem = ({item, index} ) => { //쇼핑 결과 가져오기
+    if (item.empty === true) {
+      return <View style={[styles.item, styles.itemInvisible]} />;
+    }
+    return (
+      <View
+        style={styles.item}
+      >
+        <Image style={{width: 10}} source={{uri:this.state.imageUrl}} />
+        <Text style={styles.itemText}>{item.key}</Text>
+      </View>
+    );
+  }
+
   render(){
     const { isLoaded, city, weatherName, cityTemp, error, feels } = this.state;
 
@@ -92,6 +133,12 @@ export default class App extends React.Component<Props,State>{
           <View style={styles.shopping}>
             {/* 패션 이미지 영역 */}
             <Shopping/>
+            <FlatList
+            // imageThumb={formatData(, numColumns)}
+            style={styles.container}
+            renderItem={this.renderItem}
+            numColumns={numColumns}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -116,5 +163,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDDDDD',
     padding: 5,
     margin: 5,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    width: 100,
+  },
+
+  item: {
+
+  },
+
+  itemInvisible: {
+
+  },
+
+  itemText: {
+
   },
 })
