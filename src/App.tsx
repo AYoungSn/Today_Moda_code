@@ -26,8 +26,8 @@ import Geolocation from '@react-native-community/geolocation';
 const API_KEY = "b86c474546c60f7c146da98180738950";
 
 // shopping api key
-const NAVER_API_KEY = "Z162CePuTsRagu8ZBIHn";
-const NAVER_API_SECRET = "ZhIgU_cS9J";
+const NAVER_API_KEY = "5JU7NeFVoI4HmS9ZzWnX";
+const NAVER_API_SECRET = "Fpj6gmUYjD";
 
 const numColumns = 4;
 
@@ -54,6 +54,7 @@ export default class App extends React.Component<Props,State>{
     feels: 0,
     imageUrl: '',
     imageTitle: null,
+    fashion: '바지',
   };
 
   //위치 정보 확인
@@ -68,12 +69,14 @@ export default class App extends React.Component<Props,State>{
         })
       }
     );
-    fetch("https://openapi.naver.com/v1/search/shop.json?query=%EC%A3%BC%EC%8B%9D&display=24&start=1&sort=sim", 
+    fetch("https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=10&start=1&sort=sim", 
       {
+        method: 'GET',
         headers: {
-          "X-Naver_client_id": "{NAVER_API_KEY}",
-          "X-Naver-Client-Secret": "{NAVER_API_SECRET}"
-        }
+          'X-Naver-Client-Id': `${NAVER_API_KEY}`,
+          'X-Naver-Client-Secret': `${NAVER_API_SECRET}`
+        },
+        
       }
     ).then( (response) => response.json())
     .then(json => {
@@ -120,7 +123,7 @@ export default class App extends React.Component<Props,State>{
         <View style={styles.header}>
           <Header>Today's мода</Header>
         </View>
-        <ScrollView>
+        
           <View style={styles.weather}>
             {isLoaded ?
             <Weather city={city} weatherName={weatherName} temp={Math.floor((cityTemp-273.15)*10)/10} feels={Math.floor((feels-273.15)*10)/10}/>
@@ -140,7 +143,7 @@ export default class App extends React.Component<Props,State>{
             numColumns={numColumns}
             />
           </View>
-        </ScrollView>
+        
       </SafeAreaView>
     );
   }
