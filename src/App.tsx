@@ -46,15 +46,16 @@ export default class App extends React.Component<Props,State>{
     Lovely: false,
     Campus: false,
     Office: false,
-    Modern: false
+    Modern: false,
+    key:'',
   }
 
   formatData = (data, numColumns) => {
-    const numberOfFullRows = Math.floor(data.length / numColumns);
+    const numberOfFullRows = 3;//Math.floor(this.state.length / numColumns); 11개씩 불러와서 4개씩 보여주면 3줄 나올거같아서
   
     let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
     while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
-      data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
+      this.setState({ key: `blank-${numberOfElementsLastRow}` });
       numberOfElementsLastRow++;
     }
   
@@ -130,7 +131,7 @@ export default class App extends React.Component<Props,State>{
       <View
         style={styles.item}
       >
-        <Image style={{width: 10}} source={{uri:this.state.imageUrl[0]}} /> //source가 어디에서 나온건지 모르겠어..!
+        <Image style={{width: 10}} source={{uri:this.state.imageUrl[0]}} />
         <Text style={styles.itemText}>{item.key}</Text>
       </View>
     );
@@ -225,11 +226,11 @@ export default class App extends React.Component<Props,State>{
         <View style={styles.shopping}>
           {/* 패션 이미지 영역 */}
           {/* <FlatList
-          data={this.formatData(this.state, numColumns)}
-          style={styles.container}
-          renderItem={this.renderItem}
-          numColumns={numColumns}
-          /> */}
+            data={this.formatData(this.state, numColumns)}
+            style={styles.container}
+            renderItem={this.renderItem}
+            numColumns={numColumns}
+            /> */}
         </View>
         
       </SafeAreaView>
