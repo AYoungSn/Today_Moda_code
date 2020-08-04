@@ -7,16 +7,6 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import styled from 'styled-components/native';
-
-const Key=styled.TouchableOpacity`
-  border-width: 1px;
-  border-radius: 8px;
-  border-color: #CCCCCC;
-  padding: 8px;
-  color: black;
-  margin: 5px;
-`;
 
 export default class Keyword extends React.Component{
   state={
@@ -60,9 +50,6 @@ export default class Keyword extends React.Component{
         ]}>
           <Text>러블리</Text>
         </Pressable>
-        <Key onPressIn={this.pickLov} style={styles.button}>
-          <Text>Lovely</Text>
-        </Key>
       </View>
       </>
     );

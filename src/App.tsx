@@ -4,6 +4,7 @@
  *
  * @format
  * @flow strict-local
+ * expo
  */
 
 import React from 'react';
@@ -17,11 +18,10 @@ import {
   Image,
   
 } from 'react-native';
-import styled from 'styled-components/native';
-import Weather from 'Weather';
-import Keyword from 'Keyword';
-import Shopping from 'Shopping';
-import Geolocation from '@react-native-community/geolocation';
+import Weather from './Weather';
+import Keyword from './Keyword';
+import Shopping from './Shopping';
+import * as Location from 'expo-location';
 
 const API_KEY = "b86c474546c60f7c146da98180738950";
 
@@ -30,16 +30,6 @@ const NAVER_API_KEY = "5JU7NeFVoI4HmS9ZzWnX";
 const NAVER_API_SECRET = "Fpj6gmUYjD";
 
 const numColumns = 4;
-
-const Header = styled.Text`
-color: #000000;
-font-size: 25px;
-text-align: center;
-align-items: center;
-justify-content: center;
-margin: 9px;
-font-weight: bold;
-`;
 
 interface Props {}
 interface State {}
@@ -52,31 +42,32 @@ export default class App extends React.Component<Props,State>{
     cityTemp: 0,
     error: null,
     feels: 0,
-    imageUrl: '',
-    imageTitle: null,
-    fashion: '바지',
+    imageUrl: [],
+    imageTitle: [],
+    fashion: 'pants'
   };
 
+  formatData = (data, numColumns) => {
+    const numberOfFullRows = Math.floor(data.length / numColumns);
+  
+    let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+    while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+      data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
+      numberOfElementsLastRow++;
+    }
+  
+    return data;
+  }
   //위치 정보 확인
   componentDidMount(){
-    Geolocation.getCurrentPosition(
-      position =>{
-        this._getWeather(position.coords.latitude, position.coords.longitude);
-      },
-      error => {
-        this.setState({
-          error: 'error'
-        })
-      }
-    );
-    fetch("https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=10&start=1&sort=sim", 
+    this.getLocation();
+    fetch("https://openapi.naver.com/v1/search/shop.json?query={fashion}&display=24&start=1&sort=sim", 
       {
         method: 'GET',
         headers: {
-          'X-Naver-Client-Id': `${NAVER_API_KEY}`,
-          'X-Naver-Client-Secret': `${NAVER_API_SECRET}`
-        },
-        
+          "X-Naver-Client-Id": `${NAVER_API_KEY}`,
+          "X-Naver-Client-Secret": `${NAVER_API_SECRET}`,
+        }
       }
     ).then( (response) => response.json())
     .then(json => {
@@ -87,7 +78,21 @@ export default class App extends React.Component<Props,State>{
       })
     })
   }
-  _getWeather = (lat, lon) => {
+  // _getWeather = (lat, lon) => {
+  //   fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
+  //   .then(response => response.json())
+  //   .then(json => {
+  //     this.setState({
+  //       cityTemp: json.main.temp,
+  //       weatherName: json.weather[0].main,
+  //       isLoaded: true,
+  //       city: json.name,
+  //       feels: json.main.feels_like
+  //     })
+  //   });
+  // }
+
+  _getWeather = async(lat, lon) =>{
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
     .then(response => response.json())
     .then(json => {
@@ -101,6 +106,30 @@ export default class App extends React.Component<Props,State>{
     });
   }
 
+  getLocation = async() => {
+    try{
+      const response = await Location.requestPermissionsAsync();
+      const { coords} = await Location.getCurrentPositionAsync();
+      const lat=coords.latitude;
+      const lon=coords.longitude;
+
+      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
+    .then(response => response.json())
+    .then(json => {
+      this.setState({
+        cityTemp: json.main.temp,
+        weatherName: json.weather[0].main,
+        isLoaded: true,
+        city: json.name,
+        feels: json.main.feels_like
+      })
+    });
+      
+    }catch(E){
+      console.log(E);
+    }
+  }
+
   renderItem = ({item, index} ) => { //쇼핑 결과 가져오기
     if (item.empty === true) {
       return <View style={[styles.item, styles.itemInvisible]} />;
@@ -109,7 +138,7 @@ export default class App extends React.Component<Props,State>{
       <View
         style={styles.item}
       >
-        <Image style={{width: 10}} source={{uri:this.state.imageUrl}} />
+        <Image style={{width: 10}} source={{uri:this.state.imageUrl}} /> //source가 어디에서 나온건지 모르겠어..!
         <Text style={styles.itemText}>{item.key}</Text>
       </View>
     );
@@ -120,8 +149,8 @@ export default class App extends React.Component<Props,State>{
 
     return (
       <SafeAreaView>
-        <View style={styles.header}>
-          <Header>Today's мода</Header>
+        <View style={styles.b_header}>
+          <Text style={styles.header}>Today's мода</Text>
         </View>
         
           <View style={styles.weather}>
@@ -131,17 +160,17 @@ export default class App extends React.Component<Props,State>{
           </View>
           <View style={styles.keyword}>
             {/* 키워드 영역 */}
-            <Keyword/>
+            {/* <Keyword/> */}
           </View>
           <View style={styles.shopping}>
             {/* 패션 이미지 영역 */}
             <Shopping/>
-            <FlatList
-            // imageThumb={formatData(, numColumns)}
+            {/* <FlatList
+            data={this.formatData(this.state, numColumns)}
             style={styles.container}
             renderItem={this.renderItem}
             numColumns={numColumns}
-            />
+            /> */}
           </View>
         
       </SafeAreaView>
@@ -150,9 +179,18 @@ export default class App extends React.Component<Props,State>{
 }
 
 const styles = StyleSheet.create({
-  header: {
+  b_header: {
     backgroundColor: '#FAFAFA',
     height: 55
+  },
+  header: {
+    color: '#000000',
+    fontSize: 25,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 9,
+    fontWeight: 'bold',
   },
   weather: {
     
