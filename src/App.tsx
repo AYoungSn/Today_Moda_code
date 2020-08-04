@@ -17,6 +17,8 @@ import {
   FlatList,
   Image,
   Button,
+  Platform,
+  StatusBar
 } from 'react-native';
 import Weather from './Weather';
 import * as Location from 'expo-location';
@@ -52,12 +54,13 @@ export default class App extends React.Component<Props,State>{
 
   formatData = (data, numColumns) => {
     const numberOfFullRows = 3;//Math.floor(this.state.length / numColumns); 11개씩 불러와서 4개씩 보여주면 3줄 나올거같아서
-  
-    let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
-    while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
-      this.setState({ key: `blank-${numberOfElementsLastRow}` });
-      numberOfElementsLastRow++;
-    }
+    
+    // let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
+    // while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+    //   this.setState({ key: `blank-${numberOfElementsLastRow}` });
+    //   numberOfElementsLastRow++;
+    // }
+
   
     return data;
   }
@@ -83,6 +86,7 @@ export default class App extends React.Component<Props,State>{
         imageTitle: json.title
       })
     })
+    
   }
   _getWeather = async(lat, lon) =>{
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
@@ -139,7 +143,7 @@ export default class App extends React.Component<Props,State>{
   pickSimple=()=> {
     this.state.SimpleBasic= true;
     console.log("simple basic")
-    this.shopping('simplebasic');
+    this.shopping('베이직룩');
     this.setState({
       Lovely: false,
       Campus: false,
@@ -150,7 +154,7 @@ export default class App extends React.Component<Props,State>{
   pickLov=()=>{
     this.state.Lovely=true;
     console.log("lovely");
-    this.shopping('lovely');
+    this.shopping('러블리룩');
     this.setState({
       SimpleBasic:false,
       Campus: false,
@@ -186,14 +190,14 @@ export default class App extends React.Component<Props,State>{
       Campus: false,
       Office: false,
     })
-    this.shopping('모던');
+    this.shopping('모던룩');
   }
 
   render(){
     const { isLoaded, city, weatherName, cityTemp, error, feels } = this.state;
 
     return (
-      <SafeAreaView>
+      <SafeAreaView style={{paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight}}>
         <View style={styles.b_header}>
           <Text style={styles.header}>Today's мода</Text>
         </View>
@@ -225,12 +229,12 @@ export default class App extends React.Component<Props,State>{
         
         <View style={styles.shopping}>
           {/* 패션 이미지 영역 */}
-          {/* <FlatList
-            data={this.formatData(this.state, numColumns)}
+          <FlatList
+            data={[this.state.imageUrl]}
             style={styles.container}
             renderItem={this.renderItem}
             numColumns={numColumns}
-            /> */}
+            />
         </View>
         
       </SafeAreaView>
