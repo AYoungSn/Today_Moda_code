@@ -19,8 +19,6 @@ import {
   Button,
 } from 'react-native';
 import Weather from './Weather';
-// import Keyword from './Keyword';
-import Shopping from './Shopping';
 import * as Location from 'expo-location';
 
 const API_KEY = "b86c474546c60f7c146da98180738950";
@@ -44,23 +42,11 @@ export default class App extends React.Component<Props,State>{
     feels: 0,
     imageUrl: [],
     imageTitle: [],
-    fashion: 'pants',
     SimpleBasic: false,
     Lovely: false,
     Campus: false,
     Office: false,
     Modern: false
-  }
-  pickSimple=()=> {
-    this.state.SimpleBasic= true;
-    console.log("simple basic")
-    this.setState({fashion: 'lovely'});
-  }
-  pickLov=()=>{
-    this.state.Lovely=true;
-    console.log("lovely");
-    this.setState({fashion: 'lovely'});
-    this.shopping('lovely');
   }
 
   formatData = (data, numColumns) => {
@@ -149,6 +135,58 @@ export default class App extends React.Component<Props,State>{
       </View>
     );
   }
+  pickSimple=()=> {
+    this.state.SimpleBasic= true;
+    console.log("simple basic")
+    this.shopping('simplebasic');
+    this.setState({
+      Lovely: false,
+      Campus: false,
+      Office: false,
+      Modern: false,
+    });
+  }
+  pickLov=()=>{
+    this.state.Lovely=true;
+    console.log("lovely");
+    this.shopping('lovely');
+    this.setState({
+      SimpleBasic:false,
+      Campus: false,
+      Office: false,
+      Modern: false,
+    });
+  }
+  pickCampus=()=>{
+    this.state.Campus=true;
+    this.shopping('캠퍼스룩');
+    this.setState({
+      SimpleBasic:false,
+      Lovely: false,
+      Office: false,
+      Modern: false,
+    });
+  }
+  pickOffice=()=>{
+    this.state.Office=true;
+    this.shopping('세미정장');
+    this.setState({
+      SimpleBasic:false,
+      Lovely: false,
+      Campus: false,
+      Modern: false,
+    });
+  }
+  pickModern=()=>{
+    this.state.Modern=true;
+    this.setState({
+      SimpleBasic:false,
+      Lovely: false,
+      Campus: false,
+      Office: false,
+    })
+    this.shopping('모던');
+  }
 
   render(){
     const { isLoaded, city, weatherName, cityTemp, error, feels } = this.state;
@@ -159,28 +197,40 @@ export default class App extends React.Component<Props,State>{
           <Text style={styles.header}>Today's мода</Text>
         </View>
         
-          <View style={styles.weather}>
-            {isLoaded ?
-            <Weather city={city} weatherName={weatherName} temp={Math.floor((cityTemp-273.15)*10)/10} feels={Math.floor((feels-273.15)*10)/10}/>
-            : error?<Text>{error}</Text>: null}
-          </View>
-          <View style={styles.keyword}>
-            {/* 키워드 영역 */}
-            {/* <Keyword/> */}
-            {this.state.Lovely?
-            <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Lovely</Text>
-            :<Text onPress={this.pickLov} style={styles.button}>Lovely</Text>}
-          </View>
-          <View style={styles.shopping}>
-            {/* 패션 이미지 영역 */}
-            {/* <Shopping/> */}
-            {/* <FlatList
-            data={this.formatData(this.state, numColumns)}
-            style={styles.container}
-            renderItem={this.renderItem}
-            numColumns={numColumns}
-            /> */}
-          </View>
+        <View style={styles.weather}>
+          {isLoaded ?
+          <Weather city={city} weatherName={weatherName} temp={Math.floor((cityTemp-273.15)*10)/10} feels={Math.floor((feels-273.15)*10)/10}/>
+          : error?<Text>{error}</Text>: null}
+        </View>
+        
+        <ScrollView style={styles.keyword} horizontal={true}>
+          {/* 키워드 영역 */}
+          {this.state.SimpleBasic?
+          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>SimpleBasic</Text>
+          :<Text onPress={this.pickSimple} style={styles.button}>SimpleBasic</Text>}
+          {this.state.Lovely?
+          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Lovely</Text>
+          :<Text onPress={this.pickLov} style={styles.button}>Lovely</Text>}
+          {this.state.Campus?
+          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Campus</Text>
+          :<Text onPress={this.pickCampus} style={styles.button}>Campus</Text>}
+          {this.state.Office?
+          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Office</Text>
+          :<Text onPress={this.pickOffice} style={styles.button}>Office</Text>}
+          {this.state.Modern?
+          <Text style={styles.selected}>Modern</Text>
+          :<Text onPress={this.pickModern} style={styles.button}>Modern</Text>}
+        </ScrollView>
+        
+        <View style={styles.shopping}>
+          {/* 패션 이미지 영역 */}
+          {/* <FlatList
+          data={this.formatData(this.state, numColumns)}
+          style={styles.container}
+          renderItem={this.renderItem}
+          numColumns={numColumns}
+          /> */}
+        </View>
         
       </SafeAreaView>
     );
@@ -208,6 +258,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAFAFA',
     padding: 5,
     margin: 5,
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
   shopping: {
     backgroundColor: '#DDDDDD',
@@ -240,7 +292,7 @@ const styles = StyleSheet.create({
     borderColor: '#CCCCCC',
     padding: 8,
     margin: 5,
-    width:'auto',
+    textAlign:'center',
   },
   selected: {
     color: 'black',
@@ -249,7 +301,7 @@ const styles = StyleSheet.create({
     borderColor: '#CCCCCC',
     padding: 8,
     margin: 5,
-    backgroundColor: 'gray',
-    width: 'auto',
+    fontWeight: 'bold',
+    textAlign:'center',
   }
 })
