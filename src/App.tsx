@@ -16,10 +16,10 @@ import {
   Text,
   FlatList,
   Image,
-  
+  Button,
 } from 'react-native';
 import Weather from './Weather';
-import Keyword from './Keyword';
+// import Keyword from './Keyword';
 import Shopping from './Shopping';
 import * as Location from 'expo-location';
 
@@ -44,8 +44,24 @@ export default class App extends React.Component<Props,State>{
     feels: 0,
     imageUrl: [],
     imageTitle: [],
-    fashion: 'pants'
-  };
+    fashion: 'pants',
+    SimpleBasic: false,
+    Lovely: false,
+    Campus: false,
+    Office: false,
+    Modern: false
+  }
+  pickSimple=()=> {
+    this.state.SimpleBasic= true;
+    console.log("simple basic")
+    this.setState({fashion: 'lovely'});
+  }
+  pickLov=()=>{
+    this.state.Lovely=true;
+    console.log("lovely");
+    this.setState({fashion: 'lovely'});
+    this.shopping('lovely');
+  }
 
   formatData = (data, numColumns) => {
     const numberOfFullRows = Math.floor(data.length / numColumns);
@@ -61,7 +77,10 @@ export default class App extends React.Component<Props,State>{
   //위치 정보 확인
   componentDidMount(){
     this.getLocation();
-    fetch("https://openapi.naver.com/v1/search/shop.json?query={fashion}&display=24&start=1&sort=sim", 
+    
+  }
+  shopping = (fashion) =>{
+    fetch(`https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=24&start=1&sort=sim`, 
       {
         method: 'GET',
         headers: {
@@ -78,20 +97,6 @@ export default class App extends React.Component<Props,State>{
       })
     })
   }
-  // _getWeather = (lat, lon) => {
-  //   fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
-  //   .then(response => response.json())
-  //   .then(json => {
-  //     this.setState({
-  //       cityTemp: json.main.temp,
-  //       weatherName: json.weather[0].main,
-  //       isLoaded: true,
-  //       city: json.name,
-  //       feels: json.main.feels_like
-  //     })
-  //   });
-  // }
-
   _getWeather = async(lat, lon) =>{
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
     .then(response => response.json())
@@ -114,16 +119,16 @@ export default class App extends React.Component<Props,State>{
       const lon=coords.longitude;
 
       fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
-    .then(response => response.json())
-    .then(json => {
-      this.setState({
-        cityTemp: json.main.temp,
-        weatherName: json.weather[0].main,
-        isLoaded: true,
-        city: json.name,
-        feels: json.main.feels_like
-      })
-    });
+      .then(response => response.json())
+      .then(json => {
+        this.setState({
+          cityTemp: json.main.temp,
+          weatherName: json.weather[0].main,
+          isLoaded: true,
+          city: json.name,
+          feels: json.main.feels_like
+        })
+      });
       
     }catch(E){
       console.log(E);
@@ -131,6 +136,7 @@ export default class App extends React.Component<Props,State>{
   }
 
   renderItem = ({item, index} ) => { //쇼핑 결과 가져오기
+    
     if (item.empty === true) {
       return <View style={[styles.item, styles.itemInvisible]} />;
     }
@@ -138,7 +144,7 @@ export default class App extends React.Component<Props,State>{
       <View
         style={styles.item}
       >
-        <Image style={{width: 10}} source={{uri:this.state.imageUrl}} /> //source가 어디에서 나온건지 모르겠어..!
+        <Image style={{width: 10}} source={{uri:this.state.imageUrl[0]}} /> //source가 어디에서 나온건지 모르겠어..!
         <Text style={styles.itemText}>{item.key}</Text>
       </View>
     );
@@ -161,10 +167,13 @@ export default class App extends React.Component<Props,State>{
           <View style={styles.keyword}>
             {/* 키워드 영역 */}
             {/* <Keyword/> */}
+            {this.state.Lovely?
+            <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Lovely</Text>
+            :<Text onPress={this.pickLov} style={styles.button}>Lovely</Text>}
           </View>
           <View style={styles.shopping}>
             {/* 패션 이미지 영역 */}
-            <Shopping/>
+            {/* <Shopping/> */}
             {/* <FlatList
             data={this.formatData(this.state, numColumns)}
             style={styles.container}
@@ -224,4 +233,23 @@ const styles = StyleSheet.create({
   itemText: {
 
   },
+  button: {
+    color: 'black',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#CCCCCC',
+    padding: 8,
+    margin: 5,
+    width:'auto',
+  },
+  selected: {
+    color: 'black',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#CCCCCC',
+    padding: 8,
+    margin: 5,
+    backgroundColor: 'gray',
+    width: 'auto',
+  }
 })
