@@ -16,7 +16,6 @@ import {
   Text,
   FlatList,
   Image,
-  Button,
   Platform,
   StatusBar
 } from 'react-native';
@@ -44,33 +43,22 @@ export default class App extends React.Component<Props,State>{
     feels: 0,
     imageUrl: [],
     imageTitle: [],
+    data: [],
     SimpleBasic: false,
     Lovely: false,
     Campus: false,
     Office: false,
     Modern: false,
-    key:'',
   }
 
-  formatData = (data, numColumns) => {
-    const numberOfFullRows = 3;//Math.floor(this.state.length / numColumns); 11개씩 불러와서 4개씩 보여주면 3줄 나올거같아서
-    
-    // let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
-    // while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
-    //   this.setState({ key: `blank-${numberOfElementsLastRow}` });
-    //   numberOfElementsLastRow++;
-    // }
-
-  
-    return data;
-  }
   //위치 정보 확인
   componentDidMount(){
     this.getLocation();
     
   }
+
   shopping = (fashion) =>{
-    fetch(`https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=24&start=1&sort=sim`, 
+    fetch(`https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=10&start=1&sort=sim`, 
       {
         method: 'GET',
         headers: {
@@ -80,26 +68,12 @@ export default class App extends React.Component<Props,State>{
       }
     ).then( (response) => response.json())
     .then(json => {
-      console.log(json)
-      this.setState({
-        imageUrl: json.image,
-        imageTitle: json.title
-      })
+        this.setState({
+          // imageUrl: json.items[i].image,
+          // imageTitle: json.items[i].title
+          data: json.items
+        })
     })
-    
-  }
-  _getWeather = async(lat, lon) =>{
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
-    .then(response => response.json())
-    .then(json => {
-      this.setState({
-        cityTemp: json.main.temp,
-        weatherName: json.weather[0].main,
-        isLoaded: true,
-        city: json.name,
-        feels: json.main.feels_like
-      })
-    });
   }
 
   getLocation = async() => {
@@ -112,6 +86,8 @@ export default class App extends React.Component<Props,State>{
       fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
       .then(response => response.json())
       .then(json => {
+        console.log('weather');
+        console.log(json.weather)
         this.setState({
           cityTemp: json.main.temp,
           weatherName: json.weather[0].main,
@@ -126,17 +102,12 @@ export default class App extends React.Component<Props,State>{
     }
   }
 
-  renderItem = ({item, index} ) => { //쇼핑 결과 가져오기
-    
-    if (item.empty === true) {
-      return <View style={[styles.item, styles.itemInvisible]} />;
-    }
+  _renderItem = ({item, index}) => { //쇼핑 결과 가져오기
+    console.log(item.image);
     return (
-      <View
-        style={styles.item}
-      >
-        <Image style={{width: 10}} source={{uri:this.state.imageUrl[0]}} />
-        <Text style={styles.itemText}>{item.key}</Text>
+      <View style={styles.item}>
+        <Image style={{width: 20}} source={{uri:item.image}} />
+        <Text style={styles.itemText}>{item.title}</Text>
       </View>
     );
   }
@@ -223,17 +194,18 @@ export default class App extends React.Component<Props,State>{
           <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Office</Text>
           :<Text onPress={this.pickOffice} style={styles.button}>Office</Text>}
           {this.state.Modern?
-          <Text style={styles.selected}>Modern</Text>
+          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Modern</Text>
           :<Text onPress={this.pickModern} style={styles.button}>Modern</Text>}
         </ScrollView>
         
         <View style={styles.shopping}>
           {/* 패션 이미지 영역 */}
           <FlatList
-            data={[this.state.imageUrl]}
-            style={styles.container}
-            renderItem={this.renderItem}
-            numColumns={numColumns}
+           data = {this.state.data}
+           style={styles.container}
+           renderItem={this._renderItem}
+           numColumns={numColumns}
+           keyExtractor={item=> item.productId}
             />
         </View>
         
