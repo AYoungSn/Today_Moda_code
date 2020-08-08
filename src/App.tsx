@@ -30,10 +30,7 @@ const NAVER_API_SECRET = "Fpj6gmUYjD";
 
 const numColumns = 4;
 
-interface Props {}
-interface State {}
-
-export default class App extends React.Component<Props,State>{
+export default class App extends React.Component{
   state= {
     isLoaded: false,
     city: '',
@@ -41,9 +38,7 @@ export default class App extends React.Component<Props,State>{
     cityTemp: 0,
     error: null,
     feels: 0,
-    imageUrl: [],
-    imageTitle: [],
-    data: [],
+    data: [],//상품 정보 json 배열을 통째로 가져옴
     SimpleBasic: false,
     Lovely: false,
     Campus: false,
@@ -54,11 +49,10 @@ export default class App extends React.Component<Props,State>{
   //위치 정보 확인
   componentDidMount(){
     this.getLocation();
-    
   }
 
   shopping = (fashion) =>{
-    fetch(`https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=10&start=1&sort=sim`, 
+    fetch(`https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=24&start=1&sort=sim`, 
       {
         method: 'GET',
         headers: {
@@ -69,8 +63,6 @@ export default class App extends React.Component<Props,State>{
     ).then( (response) => response.json())
     .then(json => {
         this.setState({
-          // imageUrl: json.items[i].image,
-          // imageTitle: json.items[i].title
           data: json.items
         })
     })
@@ -96,18 +88,15 @@ export default class App extends React.Component<Props,State>{
           feels: json.main.feels_like
         })
       });
-      
     }catch(E){
       console.log(E);
     }
   }
-
-  _renderItem = ({item, index}) => { //쇼핑 결과 가져오기
-    console.log(item.image);
+  _renderItem = ({item}) => { //쇼핑 결과 가져오기
     return (
       <View style={styles.item}>
-        <Image style={{width: 20}} source={{uri:item.image}} />
-        <Text style={styles.itemText}>{item.title}</Text>
+        <Text style={{color:'black'}}>hi</Text>
+        <Image source={{uri:item.image, width:30, height:30}}/>
       </View>
     );
   }
@@ -135,6 +124,7 @@ export default class App extends React.Component<Props,State>{
   }
   pickCampus=()=>{
     this.state.Campus=true;
+    console.log('campus');
     this.shopping('캠퍼스룩');
     this.setState({
       SimpleBasic:false,
@@ -145,6 +135,7 @@ export default class App extends React.Component<Props,State>{
   }
   pickOffice=()=>{
     this.state.Office=true;
+    console.log('office');
     this.shopping('세미정장');
     this.setState({
       SimpleBasic:false,
@@ -155,6 +146,7 @@ export default class App extends React.Component<Props,State>{
   }
   pickModern=()=>{
     this.state.Modern=true;
+    console.log('modern')
     this.setState({
       SimpleBasic:false,
       Lovely: false,
@@ -166,13 +158,12 @@ export default class App extends React.Component<Props,State>{
 
   render(){
     const { isLoaded, city, weatherName, cityTemp, error, feels } = this.state;
-
     return (
       <SafeAreaView style={{paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight}}>
         <View style={styles.b_header}>
           <Text style={styles.header}>Today's мода</Text>
         </View>
-        
+
         <View style={styles.weather}>
           {isLoaded ?
           <Weather city={city} weatherName={weatherName} temp={Math.floor((cityTemp-273.15)*10)/10} feels={Math.floor((feels-273.15)*10)/10}/>
@@ -180,7 +171,7 @@ export default class App extends React.Component<Props,State>{
         </View>
         
         <ScrollView style={styles.keyword} horizontal={true}>
-          {/* 키워드 영역 */}
+          {/* 스타일 키워드 영역 */}
           {this.state.SimpleBasic?
           <Text style={styles.selected} onPress={()=>console.log('onpressed')}>SimpleBasic</Text>
           :<Text onPress={this.pickSimple} style={styles.button}>SimpleBasic</Text>}
@@ -197,6 +188,12 @@ export default class App extends React.Component<Props,State>{
           <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Modern</Text>
           :<Text onPress={this.pickModern} style={styles.button}>Modern</Text>}
         </ScrollView>
+        <ScrollView style={styles.keyword} horizontal={true}>
+          {/* 옷 종류 키워드 영역 */}
+          {/* {this.state.SimpleBasic?
+          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>SimpleBasic</Text>
+          :<Text onPress={this.pickSimple} style={styles.button}>SimpleBasic</Text>} */}
+        </ScrollView>
         
         <View style={styles.shopping}>
           {/* 패션 이미지 영역 */}
@@ -208,7 +205,6 @@ export default class App extends React.Component<Props,State>{
            keyExtractor={item=> item.productId}
             />
         </View>
-        
       </SafeAreaView>
     );
   }
@@ -244,23 +240,13 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   container: {
-    flex: 1,
-    backgroundColor: '#ffffff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    width: 100,
+    margin:5,
   },
-
   item: {
-
+    margin: 5,
   },
-
-  itemInvisible: {
-
-  },
-
   itemText: {
-
+    color:'black'
   },
   button: {
     color: 'black',
