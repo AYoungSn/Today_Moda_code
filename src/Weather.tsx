@@ -50,8 +50,7 @@ const weatherCases = {
 
 }
 
-function Weather({ city, weatherName, temp, feels }){
-    const {height, width}=Dimensions.get('screen');
+function Weather({ city, weatherName, temp, feels, width}){
     return (
         <View style={styles.container}>
             <View style={styles.weather_img}>

@@ -17,7 +17,8 @@ import {
   FlatList,
   Image,
   Platform,
-  StatusBar
+  StatusBar,
+  Dimensions
 } from 'react-native';
 import Weather from './Weather';
 import * as Location from 'expo-location';
@@ -68,6 +69,7 @@ export default class App extends React.Component{
     })
   }
 
+  //위치 정보 얻어서 날씨 데이터 받아옴
   getLocation = async() => {
     try{
       const response = await Location.requestPermissionsAsync();
@@ -96,7 +98,7 @@ export default class App extends React.Component{
     return (
       <View style={styles.item}>
         <Text style={{color:'black'}}>hi</Text>
-        <Image source={{uri:item.image, width:30, height:30}}/>
+        <Image source={{uri:item.image, width:50, height:50}}/>
       </View>
     );
   }
@@ -158,6 +160,7 @@ export default class App extends React.Component{
 
   render(){
     const { isLoaded, city, weatherName, cityTemp, error, feels } = this.state;
+    const {height, width}=Dimensions.get('screen');
     return (
       <SafeAreaView style={{paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight}}>
         <View style={styles.b_header}>
@@ -166,7 +169,11 @@ export default class App extends React.Component{
 
         <View style={styles.weather}>
           {isLoaded ?
-          <Weather city={city} weatherName={weatherName} temp={Math.floor((cityTemp-273.15)*10)/10} feels={Math.floor((feels-273.15)*10)/10}/>
+          <Weather 
+          city={city} weatherName={weatherName} 
+          temp={Math.floor((cityTemp-273.15)*10)/10} feels={Math.floor((feels-273.15)*10)/10}
+          width={width}
+          />
           : error?<Text>{error}</Text>: null}
         </View>
         
