@@ -53,7 +53,7 @@ export default class App extends React.Component{
   }
 
   shopping = (fashion) =>{
-    fetch(`https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=24&start=1&sort=sim`, 
+    fetch(`https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=36&start=1&sort=sim`, 
       {
         method: 'GET',
         headers: {
@@ -97,8 +97,8 @@ export default class App extends React.Component{
   _renderItem = ({item}) => { //쇼핑 결과 가져오기
     return (
       <View style={styles.item}>
-        <Text style={{color:'black'}}>hi</Text>
-        <Image source={{uri:item.image, width:50, height:50}}/>
+        <Text></Text>
+        <Image source={{uri:item.image, width:100, height:100}}/>
       </View>
     );
   }
@@ -176,7 +176,7 @@ export default class App extends React.Component{
           />
           : error?<Text>{error}</Text>: null}
         </View>
-        
+        <View>
         <ScrollView style={styles.keyword} horizontal={true}>
           {/* 스타일 키워드 영역 */}
           {this.state.SimpleBasic?
@@ -195,6 +195,7 @@ export default class App extends React.Component{
           <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Modern</Text>
           :<Text onPress={this.pickModern} style={styles.button}>Modern</Text>}
         </ScrollView>
+        </View>
         <ScrollView style={styles.keyword} horizontal={true}>
           {/* 옷 종류 키워드 영역 */}
           {/* {this.state.SimpleBasic?
@@ -250,7 +251,12 @@ const styles = StyleSheet.create({
     margin:5,
   },
   item: {
+    backgroundColor: '#DDDDDD',
     margin: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    height: Dimensions.get('window').width / numColumns, // approximate a square
   },
   itemText: {
     color:'black'
