@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDDDDD',
     padding: 5,
     margin: 5,
-    paddingBottom: 30, //마지막 항목 정상적으로 출력하기위해서
+    paddingBottom: 5, //마지막 항목 정상적으로 출력하기위해서
     height: Dimensions.get('window').width / numColumns,
     alignItems: 'center',
     justifyContent: 'center',
