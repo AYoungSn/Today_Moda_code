@@ -29,7 +29,10 @@ const API_KEY = "b86c474546c60f7c146da98180738950";
 const NAVER_API_KEY = "5JU7NeFVoI4HmS9ZzWnX";
 const NAVER_API_SECRET = "Fpj6gmUYjD";
 
-const numColumns = 4;
+const numColumns = 3;
+
+
+
 
 export default class App extends React.Component{
   state= {
@@ -45,15 +48,30 @@ export default class App extends React.Component{
     Campus: false,
     Office: false,
     Modern: false,
+    width: 100,
+    //옷 종류 키워드
+    Slacks: false,
+    Sleeveless: false,
+    Linen: false,
+    ShortPants: false,
+    Cottonpants: false,
+    Shirts: false,
+    LongSleeve: false,
+    ShortSleeve: false,
+    Cardigan: false,
+    Jacket: false,
+    Jeans: false,
+    Coat: false,
   }
 
+	
   //위치 정보 확인
   componentDidMount(){
     this.getLocation();
   }
 
   shopping = (fashion) =>{
-    fetch(`https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=36&start=1&sort=sim`, 
+    fetch(`https://openapi.naver.com/v1/search/shop.json?query=${fashion}&display=24&start=1&sort=sim`, 
       {
         method: 'GET',
         headers: {
@@ -66,9 +84,11 @@ export default class App extends React.Component{
         this.setState({
           data: json.items
         })
-    })
+    });
   }
 
+
+	
   //위치 정보 얻어서 날씨 데이터 받아옴
   getLocation = async() => {
     try{
@@ -80,8 +100,6 @@ export default class App extends React.Component{
       fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
       .then(response => response.json())
       .then(json => {
-        console.log('weather');
-        console.log(json.weather)
         this.setState({
           cityTemp: json.main.temp,
           weatherName: json.weather[0].main,
@@ -97,8 +115,7 @@ export default class App extends React.Component{
   _renderItem = ({item}) => { //쇼핑 결과 가져오기
     return (
       <View style={styles.item}>
-        <Text></Text>
-        <Image source={{uri:item.image, width:100, height:100}}/>
+        <Image source={{uri:item.image, width:this.state.width/3.5, height:this.state.width/3}}/>
       </View>
     );
   }
@@ -111,6 +128,9 @@ export default class App extends React.Component{
       Campus: false,
       Office: false,
       Modern: false,
+	  Sleeveless:true, Linen: false, ShortPants: false,Cottonpants: false,
+	  Cardigan:true, Jacket:false, Jeans:false, Coat:false,
+	  Slacks:true, Shirts:false, LongSleeve:false, ShortSleeve:false,
     });
   }
   pickLov=()=>{
@@ -122,6 +142,9 @@ export default class App extends React.Component{
       Campus: false,
       Office: false,
       Modern: false,
+	  Sleeveless:true, Linen: false, ShortPants: false,Cottonpants: false,
+	  Cardigan:true, Jacket:false, Jeans:false, Coat:false,
+	  Slacks:true, Shirts:false, LongSleeve:false, ShortSleeve:false,
     });
   }
   pickCampus=()=>{
@@ -133,6 +156,9 @@ export default class App extends React.Component{
       Lovely: false,
       Office: false,
       Modern: false,
+	  Sleeveless:true, Linen: false, ShortPants: false,Cottonpants: false,
+	  Cardigan:true, Jacket:false, Jeans:false, Coat:false,
+	  Slacks:true, Shirts:false, LongSleeve:false, ShortSleeve:false,
     });
   }
   pickOffice=()=>{
@@ -144,6 +170,9 @@ export default class App extends React.Component{
       Lovely: false,
       Campus: false,
       Modern: false,
+	  Sleeveless:true, Linen: false, ShortPants: false,Cottonpants: false,
+	  Cardigan:true, Jacket:false, Jeans:false, Coat:false,
+	  Slacks:true, Shirts:false, LongSleeve:false, ShortSleeve:false,
     });
   }
   pickModern=()=>{
@@ -154,55 +183,271 @@ export default class App extends React.Component{
       Lovely: false,
       Campus: false,
       Office: false,
+	  Sleeveless:true, Linen: false, ShortPants: false,Cottonpants: false,
+	  Cardigan:true, Jacket:false, Jeans:false, Coat:false,
+	  Slacks:true, Shirts:false, LongSleeve:false, ShortSleeve:false,
     })
     this.shopping('모던룩');
   }
 
+
+  pickSleeveless=()=> {
+    this.state.Sleeveless= true;
+    console.log("Sleeveless")
+    this.setState({
+     Linen:false,
+     ShortPants: false,
+     Cottonpants: false,
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+민소매') : 
+	(this.state.Lovely ? this.shopping('러블리룩+민소매') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+민소매') :(
+	 this.state.Office ? this.shopping('오피스룩+민소매') :(
+	 this.state.Modern ? this.shopping('모던룩+민소매') : this.shopping('민소매')))))}
+	  
+	
+  }
+  pickLinen=()=> {
+    this.state.Linen= true;
+    console.log("Linen")
+    this.setState({
+      Sleeveless:false,
+      ShortPants: false,
+      Cottonpants: false,
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+린넨') : 
+	(this.state.Lovely ? this.shopping('러블리룩+린넨') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+린넨') :(
+	 this.state.Office ? this.shopping('오피스룩+린넨') :(
+	 this.state.Modern ? this.shopping('모던룩+린넨') : this.shopping('린넨')))))}
+	
+  }
+  pickShortPants=()=> {
+    this.state.ShortPants= true;
+    console.log("Short Pants")
+    this.setState({
+	  Sleeveless:false,
+      Linen: false,
+      Cottonpants: false,
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+숏바지') : 
+	(this.state.Lovely ? this.shopping('러블리룩+숏바지') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+숏바지') :(
+	 this.state.Office ? this.shopping('오피스룩+숏바지') :(
+	 this.state.Modern ? this.shopping('모던룩+숏바지') : this.shopping('숏바지')))))}
+  }
+  
+	pickCottonpants=()=> {
+    this.state.Cottonpants= true;
+    console.log("Cottonpants")
+    this.setState({
+      Sleeveless:false,
+      Linen: false,
+      ShortPants: false,
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+면바지') : 
+	(this.state.Lovely ? this.shopping('러블리룩+면바지') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+면바지') :(
+	 this.state.Office ? this.shopping('오피스룩+면바지') :(
+	 this.state.Modern ? this.shopping('모던룩+면바지') : this.shopping('면바지')))))}
+  }
+  pickSlacks=()=> {
+    this.state.Slacks= true;
+    console.log("slacks")
+    this.setState({
+     Shrits: false,
+	 LongSleeve: false,
+	 ShortSleeve: false,	
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+슬랙스') : 
+	(this.state.Lovely ? this.shopping('러블리룩+슬랙스') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+슬랙스') :(
+	 this.state.Office ? this.shopping('오피스룩+슬랙스') :(
+	 this.state.Modern ? this.shopping('모던룩+슬랙스') : this.shopping('슬랙스')))))}
+  }
+  
+  pickShirts=()=> {
+    this.state.Shirts= true;
+    console.log("Shrits")
+    this.setState({
+     Slacks: false,
+	 LongSleeve: false,
+	 ShortSleeve: false,	
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+셔츠') : 
+	(this.state.Lovely ? this.shopping('러블리룩+셔츠') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+셔츠') :(
+	 this.state.Office ? this.shopping('오피스룩+셔츠') :(
+	 this.state.Modern ? this.shopping('모던룩+셔츠') : this.shopping('셔츠')))))}
+  }
+  pickLongSleeve=()=> {
+    this.state.LongSleeve= true;
+    console.log("LongSleeve")
+    this.setState({
+     Slacks: false,
+	 Shirts: false,
+	 ShortSleeve: false,
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+롱슬리브') : 
+	(this.state.Lovely ? this.shopping('러블리룩+롱슬리브') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+롱슬리브') :(
+	 this.state.Office ? this.shopping('오피스룩+롱슬리브') :(
+	 this.state.Modern ? this.shopping('모던룩+롱슬리브') : this.shopping('롱슬리브')))))}
+  }
+	pickShortSleeve=()=> {
+    this.state.ShortSleeve= true;
+    console.log("ShortSleeve")
+    this.setState({
+     Slacks: false,
+	 Shirts: false,
+	 LongSleeve: false,
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+숏슬리브') : 
+	(this.state.Lovely ? this.shopping('러블리룩+숏슬리브') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+숏슬리브') :(
+	 this.state.Office ? this.shopping('오피스룩+숏슬리브') :(
+	 this.state.Modern ? this.shopping('모던룩+숏슬리브') : this.shopping('숏슬리브')))))}
+  }
+  pickCardigan=()=> {
+    this.state.Cardigan= true;
+    console.log("Cardigan")
+    this.setState({
+     Jacket: false,
+	 Jeans: false,
+	 Coat: false,
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+가디건') : 
+	(this.state.Lovely ? this.shopping('러블리룩+가디건') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+가디건') :(
+	 this.state.Office ? this.shopping('오피스룩+가디건') :(
+	 this.state.Modern ? this.shopping('모던룩+가디건') : this.shopping('가디건')))))}
+  }
+  pickJacket=()=> {
+    this.state.Jacket= true;
+    console.log("Jacket")
+    this.setState({
+     Cardigan: false,
+	 Jeans: false,
+	 Coat: false,
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+자켓') : 
+	(this.state.Lovely ? this.shopping('러블리룩+자켓') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+자켓') :(
+	 this.state.Office ? this.shopping('오피스룩+자켓') :(
+	 this.state.Modern ? this.shopping('모던룩+자켓') : this.shopping('자켓')))))}
+  }
+  pickJeans=()=> {
+    this.state.Jeans= true;
+    console.log("Jeans")
+    this.setState({
+     Cardigan: false,
+	 Jacket: false,
+	 Coat: false,
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+청바지') : 
+	(this.state.Lovely ? this.shopping('러블리룩+청바지') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+청바지') :(
+	 this.state.Office ? this.shopping('오피스룩+청바지') :(
+	 this.state.Modern ? this.shopping('모던룩+청바지') : this.shopping('청바지')))))}
+  }
+  pickCoat=()=> {
+    this.state.Coat= true;
+    console.log("Coat")
+    this.setState({
+     Cardigan: false,
+	 Jacket: false,
+	 Jeans: false,
+    });
+	{this.state.SimpleBasic ? this.shopping('베이직룩+코트') : 
+	(this.state.Lovely ? this.shopping('러블리룩+코트') :(
+	 this.state.Campus ? this.shopping('캠퍼스룩+코트') :(
+	 this.state.Office ? this.shopping('오피스룩+코트') :(
+	 this.state.Modern ? this.shopping('모던룩+코트') : this.shopping('코트')))))}
+  }
+  
   render(){
-    const { isLoaded, city, weatherName, cityTemp, error, feels } = this.state;
-    const {height, width}=Dimensions.get('screen');
+    const { isLoaded, city, weatherName, cityTemp, error } = this.state;
+    const feels=Math.floor((this.state.feels-273.15)*10)/10;
+    this.state.width= Dimensions.get('screen').width;
     return (
       <SafeAreaView style={{paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight}}>
         <View style={styles.b_header}>
           <Text style={styles.header}>Today's мода</Text>
         </View>
-
+        <ScrollView>
         <View style={styles.weather}>
           {isLoaded ?
           <Weather 
           city={city} weatherName={weatherName} 
-          temp={Math.floor((cityTemp-273.15)*10)/10} feels={Math.floor((feels-273.15)*10)/10}
-          width={width}
+          temp={Math.floor((cityTemp-273.15)*10)/10} feels={feels}
+          width={this.state.width}
           />
-          : error?<Text>{error}</Text>: null}
+          : error? <Text>{error}</Text>: null}
         </View>
         <View>
-        <ScrollView style={styles.keyword} horizontal={true}>
-          {/* 스타일 키워드 영역 */}
-          {this.state.SimpleBasic?
-          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>SimpleBasic</Text>
-          :<Text onPress={this.pickSimple} style={styles.button}>SimpleBasic</Text>}
-          {this.state.Lovely?
-          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Lovely</Text>
-          :<Text onPress={this.pickLov} style={styles.button}>Lovely</Text>}
-          {this.state.Campus?
-          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Campus</Text>
-          :<Text onPress={this.pickCampus} style={styles.button}>Campus</Text>}
-          {this.state.Office?
-          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Office</Text>
-          :<Text onPress={this.pickOffice} style={styles.button}>Office</Text>}
-          {this.state.Modern?
-          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Modern</Text>
-          :<Text onPress={this.pickModern} style={styles.button}>Modern</Text>}
-        </ScrollView>
+          <ScrollView style={styles.keyword} horizontal={true}>
+            {/* 스타일 키워드 영역 */}
+            {this.state.SimpleBasic?
+            <Text style={styles.selected} onPress={()=>console.log('onpressed')}>SimpleBasic</Text>
+            :<Text onPress={this.pickSimple} style={styles.button} >SimpleBasic</Text>}
+            {this.state.Lovely?
+            <Text style={styles.selected} onPress={()=>console.log('onpressed')} >Lovely</Text>
+            :<Text onPress={this.pickLov} style={styles.button}>Lovely</Text>}
+            {this.state.Campus?
+            <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Campus</Text>
+            :<Text onPress={this.pickCampus} style={styles.button}>Campus</Text>}
+            {this.state.Office?
+            <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Office</Text>
+            :<Text onPress={this.pickOffice} style={styles.button}>Office</Text>}
+            {this.state.Modern?
+            <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Modern</Text>
+            :<Text onPress={this.pickModern} style={styles.button}>Modern</Text>}
+          </ScrollView>
         </View>
-        <ScrollView style={styles.keyword} horizontal={true}>
-          {/* 옷 종류 키워드 영역 */}
-          {/* {this.state.SimpleBasic?
-          <Text style={styles.selected} onPress={()=>console.log('onpressed')}>SimpleBasic</Text>
-          :<Text onPress={this.pickSimple} style={styles.button}>SimpleBasic</Text>} */}
-        </ScrollView>
-        
+        <View>
+          <ScrollView style={styles.keyword} horizontal={true}>
+            {this.state.feels>30?
+            [this.state.Sleeveless?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Sleeveless</Text>
+              :<Text onPress={this.pickSleeveless} style={styles.button}>Sleeveless</Text>,
+			 this.state.Linen?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Linen</Text>
+			  :<Text onPress={this.pickLinen} style={styles.button}>Linen</Text>,
+			 this.state.ShortPants?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Short Pants</Text>
+              :<Text onPress={this.pickShortPants} style={styles.button}>Short Pants</Text>,
+			 this.state.Cottonpants?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Cotton pants</Text>
+              :<Text onPress={this.pickCottonpants} style={styles.button}>Cotton pants</Text>]
+            :this.state.feels<=30 && this.state.feels>20?
+            [this.state.Slacks?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Slacks</Text>
+              :<Text onPress={this.pickSlacks} style={styles.button}>Slacks</Text>,
+			 this.state.Shrits?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Shrits</Text>
+			  :<Text onPress={this.pickShrits} style={styles.button}>Shrits</Text>,
+			 this.state.LongSleeve?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Long Sleeve</Text>
+              :<Text onPress={this.pickLongSleeve} style={styles.button}>Long Sleeve</Text>,
+			 this.state.ShortSleeve?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Short Sleeve</Text>
+              :<Text onPress={this.pickShortSleeve} style={styles.button}>Short Sleeve</Text>
+            ]:
+            [this.state.Cardigan?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Cardigan</Text>
+              :<Text onPress={this.pickCardigan} style={styles.button}>Cardigan</Text>,
+			 this.state.Jacket?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Jacket</Text>
+			  :<Text onPress={this.pickJacket} style={styles.button}>Jacket</Text>,
+			 this.state.Jeans?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Jeans</Text>
+              :<Text onPress={this.pickJeans} style={styles.button}>JeansJeans</Text>,
+			 this.state.Coat?
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Coat</Text>
+              :<Text onPress={this.pickCoat} style={styles.button}>Coat</Text>
+            ]}
+          </ScrollView>
+        </View>
         <View style={styles.shopping}>
           {/* 패션 이미지 영역 */}
           <FlatList
@@ -213,6 +458,7 @@ export default class App extends React.Component{
            keyExtractor={item=> item.productId}
             />
         </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -246,17 +492,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDDDDD',
     padding: 5,
     margin: 5,
+    paddingBottom: 30, //마지막 항목 정상적으로 출력하기위해서
+    height: Dimensions.get('window').width/numColumns,
+    alignItems: 'center',
+    justifyContent: 'center',
+    //flex: 1,
   },
   container: {
-    margin:5,
+    // margin:5,
   },
   item: {
     backgroundColor: '#DDDDDD',
     margin: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    height: Dimensions.get('window').width / numColumns, // approximate a square
+
   },
   itemText: {
     color:'black'
