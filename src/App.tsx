@@ -375,9 +375,10 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 5,
     height: Dimensions.get('window').height / 2,
+    paddingBottom: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 50,
+    
   },
   container: {
     // margin:5,
