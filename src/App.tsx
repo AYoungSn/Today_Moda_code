@@ -278,7 +278,6 @@ export default class App extends React.Component{
         <View style={styles.b_header}>
           <Text style={styles.header}>Today's мода</Text>
         </View>
-        <ScrollView>
         <View style={styles.weather}>
           {isLoaded ?
           <Weather 
@@ -326,9 +325,9 @@ export default class App extends React.Component{
             ]:
             [
               <Text onPress={this.pickCardigan} style={styles.button}>Cardigan</Text>,
-                <Text onPress={this.pickSlacks} style={styles.button}>Jacket</Text>,
-              <Text onPress={this.pickSlacks} style={styles.button}>Jeans</Text>,
-              <Text onPress={this.pickSlacks} style={styles.button}>Coat</Text>,
+              <Text onPress={this.pickJacket} style={styles.button}>Jacket</Text>,
+              <Text onPress={this.pickJeans} style={styles.button}>Jeans</Text>,
+              <Text onPress={this.pickCoat} style={styles.button}>Coat</Text>,
             ]}
           </ScrollView>
         </View>
@@ -342,7 +341,6 @@ export default class App extends React.Component{
            keyExtractor={item=> item.productId}
             />
         </View>
-        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -376,11 +374,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDDDDD',
     padding: 5,
     margin: 5,
-    paddingBottom: 30, //마지막 항목 정상적으로 출력하기위해서
-    height: Dimensions.get('window').width / numColumns,
+    height: Dimensions.get('window').height / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    //flex: 1,
+    paddingBottom: 50,
   },
   container: {
     // margin:5,
