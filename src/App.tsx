@@ -33,9 +33,6 @@ const NAVER_API_SECRET = "Fpj6gmUYjD";
 
 const numColumns = 3;
 
-
-
-
 export default class App extends React.Component{
   state= {
     isLoaded: false,
@@ -65,7 +62,6 @@ export default class App extends React.Component{
     Jeans: false,
     Coat: false,
   }
-
 	
   //위치 정보 확인
   componentDidMount(){
@@ -88,9 +84,6 @@ export default class App extends React.Component{
         })
     });
   }
-
-
-	
   //위치 정보 얻어서 날씨 데이터 받아옴
   getLocation = async() => {
     try{
@@ -172,7 +165,7 @@ export default class App extends React.Component{
       Lovely: false,
       Campus: false,
       Modern: false,
-	  Sleeveless:true, Linen: false, ShortPants: false,Cottonpants: false,
+	    Sleeveless:true, Linen: false, ShortPants: false,Cottonpants: false,
 	  Cardigan:true, Jacket:false, Jeans:false, Coat:false,
 	  Slacks:true, Shirts:false, LongSleeve:false, ShortSleeve:false,
     });
@@ -191,7 +184,6 @@ export default class App extends React.Component{
     })
     this.shopping('모던룩');
   }
-
 
   pickSleeveless=()=> {
     this.state.Sleeveless= true;
@@ -257,7 +249,7 @@ export default class App extends React.Component{
     this.state.Slacks= true;
     console.log("slacks")
     this.setState({
-     Shrits: false,
+     Shirts: false,
 	 LongSleeve: false,
 	 ShortSleeve: false,	
     });
@@ -376,7 +368,6 @@ export default class App extends React.Component{
         <View style={styles.b_header}>
           <Text style={styles.header}>Today's мода</Text>
         </View>
-        <ScrollView>
         <View style={styles.weather}>
           {isLoaded ?
           <Weather 
@@ -425,9 +416,9 @@ export default class App extends React.Component{
             [this.state.Slacks?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Slacks</Text>
               :<Text onPress={this.pickSlacks} style={styles.button}>Slacks</Text>,
-			 this.state.Shrits?
+			 this.state.Shirts?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Shrits</Text>
-			  :<Text onPress={this.pickShrits} style={styles.button}>Shrits</Text>,
+			  :<Text onPress={this.pickShirts} style={styles.button}>Shrits</Text>,
 			 this.state.LongSleeve?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Long Sleeve</Text>
               :<Text onPress={this.pickLongSleeve} style={styles.button}>Long Sleeve</Text>,
@@ -460,7 +451,6 @@ export default class App extends React.Component{
            keyExtractor={item=> item.productId}
             />
         </View>
-        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -494,8 +484,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#DDDDDD',
     padding: 5,
     margin: 5,
-    paddingBottom: 30, //마지막 항목 정상적으로 출력하기위해서
-    height: Dimensions.get('window').width/numColumns,
+    paddingBottom: 50, //마지막 항목 정상적으로 출력하기위해서
+    height: Dimensions.get('window').height/2,
     alignItems: 'center',
     justifyContent: 'center',
     //flex: 1,
@@ -508,7 +498,6 @@ const styles = StyleSheet.create({
     margin: 5,
     alignItems: 'center',
     justifyContent: 'center',
-
   },
   itemText: {
     color:'black'
