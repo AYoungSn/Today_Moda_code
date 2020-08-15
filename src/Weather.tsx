@@ -1,48 +1,55 @@
 import React from 'react';
 import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 // https://ionicons.com/   icon 파일명 찾는곳
 
 import PropTypes from 'prop-types';
 
 const weatherCases = {
     Thunderstorm: {
-        icon: 'ios-thunderstorm',
+        icon: 'weather-lightning',
         weatherName: 'Thunderstorm',
         desc: '오늘은 천둥 번개가 쳐요',
         color: '#FFD000'
     },
 
     Drizzle: {
-        icon: 'ios-rainy',
+        icon: 'weather-rainy',
         weatherName: 'Drizzle',
         desc: '오늘은 이슬비가 내려요',
         color: '#29ACC5',
     },
 
     Rain: {
-        icon: 'ios-umbrella',
+        icon: 'weather-pouring',
         weatherName: 'Rain',
         desc: '오늘은 비가 내려요. 우산을 꼭 챙기세요!',
         color: '#7C5786',
     },
 
+    Mist: {
+        icon: 'weather-fog',
+        weatherName: 'Mist',
+        desc: '안개',
+        color: '#29ACC5'
+    },
+
     Snow: {
-        icon: 'ios-snow',
+        icon: 'weather-snowy',
         weatherName: 'Snow',
         desc: '오늘은 눈이 내려요.',
         color: '#61ECED',
     },
 
     Clear: {
-        icon: 'ios-sunny',
+        icon: 'weather-sunny',
         weatherName: 'Clear',
         desc: '오늘은 맑아요',
         color: '#EE682E',
     },
 
     Clouds: {
-        icon: 'ios-cloudy',
+        icon: 'weather-cloudy',
         weatherName: 'Clouds',
         desc: '오늘은 흐려요',
         color: '#AFAFAF',
@@ -54,7 +61,7 @@ function Weather({ city, weatherName, temp, feels, width}){
     return (
         <View style={styles.container}>
             <View style={styles.weather_img}>
-                <Ionicons name={weatherCases[weatherName].icon} size={width/3} color={weatherCases[weatherName].color}/>
+                <MaterialCommunityIcons name={weatherCases[weatherName].icon} size={width/3} color={weatherCases[weatherName].color}/>
             </View>
             
             <View style={styles.w_info}>
@@ -88,14 +95,14 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         alignItems: 'flex-start',
         color:'black',
-        marginLeft: 19,
-        marginRight: 18,
-        marginTop: 15,
+        marginLeft: 17,
+        marginRight: 15,
+        marginTop: 8,
     }, w_info: {
         flex:3,
         textAlign: 'left',
         flexDirection: 'column',
-        marginTop: 20,
+        marginTop: 13,
         marginLeft: 20,
         
     }, w_txt: {

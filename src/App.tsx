@@ -95,6 +95,7 @@ export default class App extends React.Component{
       fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`)
       .then(response => response.json())
       .then(json => {
+        console.log(json.weather[0].main)
         this.setState({
           cityTemp: json.main.temp,
           weatherName: json.weather[0].main,
@@ -239,7 +240,6 @@ export default class App extends React.Component{
 	 this.state.LongSleeve ? this.shopping('모던룩+롱슬리브') :(
 	 this.state.ShortSleeve ? this.shopping('모던룩+숏슬리브') : this.shopping('모던룩') )))))))))))}
   }
-
   pickSleeveless=()=> {
     this.state.Sleeveless= true;
     console.log("Sleeveless")
@@ -253,8 +253,6 @@ export default class App extends React.Component{
 	 this.state.Campus ? this.shopping('캠퍼스룩+민소매') :(
 	 this.state.Office ? this.shopping('오피스룩+민소매') :(
 	 this.state.Modern ? this.shopping('모던룩+민소매') : this.shopping('민소매')))))}
-	  
-	
   }
   pickLinen=()=> {
     this.state.Linen= true;
@@ -369,7 +367,7 @@ export default class App extends React.Component{
 	(this.state.Lovely ? this.shopping('러블리룩+가디건') :(
 	 this.state.Campus ? this.shopping('캠퍼스룩+가디건') :(
 	 this.state.Office ? this.shopping('오피스룩+가디건') :(
-	 this.state.Modern ? this.shopping('모던룩+가디건') : this.shopping('가디건')))))}
+	 this.state.Modern ? this.shopping('모던룩+가디건') : this.shopping('가디건')))))};
   }
   pickJacket=()=> {
     this.state.Jacket= true;
@@ -439,7 +437,7 @@ export default class App extends React.Component{
             <Text style={styles.selected} onPress={()=>console.log('onpressed')}>SimpleBasic</Text>
             :<Text onPress={this.pickSimple} style={styles.button} >SimpleBasic</Text>}
             {this.state.Lovely?
-            <Text style={styles.selected} onPress={()=>console.log('onpresse')} >Lovely</Text>
+            <Text style={styles.selected} onPress={()=>console.log('onpressed')} >Lovely</Text>
             :<Text onPress={this.pickLov} style={styles.button}>Lovely</Text>}
             {this.state.Campus?
             <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Campus</Text>
@@ -452,10 +450,11 @@ export default class App extends React.Component{
             :<Text onPress={this.pickModern} style={styles.button}>Modern</Text>}
           </ScrollView>
         </View>
+        
         <View>
           <ScrollView style={styles.keyword} horizontal={true}>
             {feels>30?
-            [this.state.Sleeveless?
+            ([this.state.Sleeveless?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Sleeveless</Text>
               :<Text onPress={this.pickSleeveless} style={styles.button}>Sleeveless</Text>,
 			 this.state.Linen?
@@ -466,14 +465,15 @@ export default class App extends React.Component{
               :<Text onPress={this.pickShortPants} style={styles.button}>Short Pants</Text>,
 			 this.state.Cottonpants?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Cotton pants</Text>
-              :<Text onPress={this.pickCottonpants} style={styles.button}>Cotton pants</Text>]
+              :<Text onPress={this.pickCottonpants} style={styles.button}>Cotton pants</Text>
+            ])
             :feels>20?
-            [this.state.Slacks?
+            [(this.state.Slacks?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Slacks</Text>
-              :<Text onPress={this.pickSlacks} style={styles.button}>Slacks</Text>,
+              :<Text onPress={this.pickSlacks} style={styles.button}>Slacks</Text>),
 			 this.state.Shirts?
-              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Shrits</Text>
-			  :<Text onPress={this.pickShirts} style={styles.button}>Shrits</Text>,
+              <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Shirts</Text>
+			        :<Text onPress={this.pickShirts} style={styles.button}>Shirts</Text>,
 			 this.state.LongSleeve?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Long Sleeve</Text>
               :<Text onPress={this.pickLongSleeve} style={styles.button}>Long Sleeve</Text>,
@@ -481,19 +481,19 @@ export default class App extends React.Component{
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Short Sleeve</Text>
               :<Text onPress={this.pickShortSleeve} style={styles.button}>Short Sleeve</Text>
             ]:
-            [this.state.Cardigan?
+            ([(this.state.Cardigan?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Cardigan</Text>
-              :<Text onPress={this.pickCardigan} style={styles.button}>Cardigan</Text>,
+              :<Text onPress={this.pickCardigan} style={styles.button}>Cardigan</Text>),
 			 this.state.Jacket?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Jacket</Text>
-			  :<Text onPress={this.pickJacket} style={styles.button}>Jacket</Text>,
+			        :<Text onPress={this.pickJacket} style={styles.button}>Jacket</Text>,
 			 this.state.Jeans?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Jeans</Text>
-              :<Text onPress={this.pickJeans} style={styles.button}>JeansJeans</Text>,
+              :<Text onPress={this.pickJeans} style={styles.button}>Jeans</Text>,
 			 this.state.Coat?
               <Text style={styles.selected} onPress={()=>console.log('onpressed')}>Coat</Text>
               :<Text onPress={this.pickCoat} style={styles.button}>Coat</Text>
-            ]}
+            ])}
           </ScrollView>
         </View>
         <View style={styles.shopping}>
