@@ -1,9 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, Dimensions} from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-// https://ionicons.com/   icon 파일명 찾는곳
-
-import PropTypes from 'prop-types';
+import {StyleSheet, Text, View} from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const weatherCases = {
     Thunderstorm: {
@@ -72,13 +69,6 @@ function Weather({ city, weatherName, temp, feels, width}){
             </View>
         </View>
     )
-}
-
-Weather.propTypes = {
-    city: PropTypes.string.isRequired,
-    weatherName: PropTypes.string.isRequired,
-    temp: PropTypes.number.isRequired,
-    feels: PropTypes.number.isRequired,
 }
 
 export default Weather;
